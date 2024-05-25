@@ -1,26 +1,23 @@
 import { useState } from "react";
-
-function Square({ value, onSquareClick }) {
-  return (
-    <button
-      className="w-10 h-10 border-yellow-400 text-yellow-500 border-2 bg-black  font-bold"
-      onClick={onSquareClick}
-    >
-      {value}
-    </button>
-  );
-}
+import Square from "./components/Square";
 
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
 
   const [squares, setSquares] = useState(Array(9).fill(null));
 
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = "Winner: " + winner;
+  } else {
+    status = "Next player: " + (xIsNext ? "X" : "O");
+  }
+
   function handleClick(i) {
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
-
     const nextSquares = squares.slice();
     if (xIsNext) {
       nextSquares[i] = "X";
@@ -31,38 +28,30 @@ export default function Board() {
     setXIsNext(!xIsNext);
   }
 
-  const winner = calculateWinner(squares);
-  let status;
-  if (winner) {
-    status = "Winner: " + winner;
-  } else {
-    status = "Next player: " + (xIsNext ? "X" : "O");
-  }
-
   return (
-    <div className="flex flex-col place-items-center  bg-gray-950 h-screen">
-      <div className="bg-black font-bold text-yellow-500 my-[10%] px-5 py-2 border-yellow-300 border-2 rounded-xl">
-        {status}
-      </div>
-
-      <div className="flex">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-      </div>
-      <div className="flex">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-      </div>
-      <div className="flex">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+    <div>
+      <div className="m-4 text-3xl">{status}</div>
+      <div className="flex flex-col m-3 w-24 h-24">
+        <div className="flex">
+          <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+          <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+          <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+        </div>
+        <div className="flex">
+          <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+          <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+          <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+        </div>
+        <div className="flex">
+          <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+          <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+          <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+        </div>
       </div>
     </div>
   );
 }
+
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
